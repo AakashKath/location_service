@@ -12,7 +12,7 @@ from location.models import Locality, City
 
 from location.serializers import LocalitySerializer, CitySerializer
 
-LOCATION_URL = reverse('location:locality-list')
+LOCALITY_URL = reverse('location:locality-list')
 CITY_URL = reverse('location:city-list')
 
 

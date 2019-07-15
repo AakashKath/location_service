@@ -13,7 +13,7 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class LocalitySerializer(serializers.ModelSerializer):
-    """Serializer for locality objects"""
+    """Name serializer for locality objects"""
 
     class Meta:
         model = Locality
