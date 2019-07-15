@@ -11,7 +11,12 @@ class CityViewSet(viewsets.ModelViewSet):
     serializer_class = CitySerializer
 
     def get_queryset(self):
-        return self.queryset
+        city = self.request.query_params.get('name')
+        queryset = self.queryset
+        if city:
+            queryset = queryset.filter(name__istartswith=city).order_by('name')
+
+        return queryset
 
 
 class LocalityViewSet(viewsets.ModelViewSet):
