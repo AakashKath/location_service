@@ -1,5 +1,6 @@
-from django.db.models import Q, F, ExpressionWrapper, DecimalField
+from django.db.models import F
 from rest_framework import viewsets
+from ratelimit.mixins import RatelimitMixin
 
 from location.models import Locality, City
 
@@ -12,8 +13,12 @@ class CityViewSet(viewsets.ModelViewSet):
     serializer_class = CitySerializer
 
 
-class LocalityNameViewSet(viewsets.ModelViewSet):
+class LocalityNameViewSet(viewsets.ModelViewSet, RatelimitMixin):
     """Manage locality objects by name"""
+    ratelimit_key = 'ip'
+    ratelimit_rate = '5/m'
+    ratelimit_block = True
+
     queryset = Locality.objects.all()
     serializer_class = LocalitySerializer
 
@@ -25,13 +30,18 @@ class LocalityNameViewSet(viewsets.ModelViewSet):
         long = float(long_str)
         queryset = self.queryset
         if city:
-            queryset = queryset.filter(name__istartswith=city).order_by((F('latitude')-lat)**2+(F('longitude')-long)**2)[:5]
+            queryset = queryset.filter(name__istartswith=city)\
+                .order_by((F('latitude')-lat)**2+(F('longitude')-long)**2)[:5]
 
         return queryset
 
 
-class LocalityDistanceViewSet(viewsets.ModelViewSet):
+class LocalityDistanceViewSet(viewsets.ModelViewSet, RatelimitMixin):
     """Manage locality objects by distance"""
+    ratelimit_key = 'ip'
+    ratelimit_rate = '5/m'
+    ratelimit_block = True
+
     queryset = Locality.objects.all()
     serializer_class = LocalitySerializer
 
@@ -42,7 +52,7 @@ class LocalityDistanceViewSet(viewsets.ModelViewSet):
         long = float(long_str)
         queryset = self.queryset
         if lat_str and long_str:
-            queryset=queryset.annotate(distance=(F('latitude')-lat)**2+(F('longitude')-long)**2).filter(distance__lte=10).order_by((F('latitude')-lat)**2+(F('longitude')-long)**2)
+            queryset = queryset.annotate(distance=(F('latitude')-lat)**2+(F('longitude')-long)**2)\
+                .filter(distance__lte=10).order_by((F('latitude')-lat)**2+(F('longitude')-long)**2)
 
         return queryset
-    

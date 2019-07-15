@@ -7,8 +7,16 @@ from location import views
 router = DefaultRouter()
 
 router.register('city', views.CityViewSet)
-router.register('locality-name', views.LocalityNameViewSet, base_name='locality-name')
-router.register('locality-distance', views.LocalityDistanceViewSet, base_name='locality-distance')
+router.register(
+    'locality-name',
+    views.LocalityNameViewSet,
+    base_name='locality-name'
+)
+router.register(
+    'locality-distance',
+    views.LocalityDistanceViewSet,
+    base_name='locality-distance'
+)
 
 app_name = 'location'
 

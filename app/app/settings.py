@@ -85,6 +85,10 @@ DATABASES = {
     }
 }
 
+#RATELIMIT
+RATELIMIT_ENABLE = True
+RATELIMIT_USE_CACHE = 'default'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
